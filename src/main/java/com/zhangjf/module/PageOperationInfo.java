@@ -1,8 +1,14 @@
 package com.zhangjf.module;
 
-import com.google.gson.Gson;
+import org.apache.commons.lang.StringUtils;
+import com.zhangjf.utils.GlobalAttribute;
 import com.zhangjf.utils.Result;
 
+/**
+ * 页面操作
+ * @author 张俊繁
+ *
+ */
 public class PageOperationInfo {
 
 	private String keyType;     //查找页面元素通过的手段，比如id,name,xpath,linktext
@@ -56,14 +62,41 @@ public class PageOperationInfo {
 		this.sleepTime = sleepTime;
 	}
 	
-	public void checkValue(Result result){
-		
-	}
-	
-	@Override
-	public String toString(){
-		Gson gson = new Gson();
-		return gson.toJson(this);
+	public boolean checkValue(Result result){
+		if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getTab)){
+			return true;
+		}else if(operaType.equalsIgnoreCase(GlobalAttribute.oper_switchTab) && operaType.equalsIgnoreCase(GlobalAttribute.oper_keyEvent)){
+			if(StringUtils.isBlank(value)){
+				result.setResultCode(false);
+				result.setResMsg("the request param value should not be empty when the operaType is " + operaType);
+				return false;
+			}
+		}else{
+			if(!(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement) || eleType.equalsIgnoreCase(GlobalAttribute.ele_Select))){
+				result.setResultCode(false);
+				result.setResMsg("the eleType should be either webElement or select, keyType and keyValue is " + keyType + "_" + keyValue);
+				return false;
+			}
+			if(StringUtils.isBlank(keyType) || StringUtils.isBlank(keyValue)){
+				result.setResultCode(false);
+				result.setResMsg("both the keyType and keyValue should not be empty, now keyType and keyValue is " + keyType + "_" + keyValue);
+				return false;
+			}
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_putValue)){
+				if(StringUtils.isBlank(value)){
+					result.setResultCode(false);
+					result.setResMsg("the request param value should not be empty when the operaType is " + operaType + ", keyType and keyValue is " + keyType + "_" + keyValue);
+					return false;
+				}
+			}else if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getText) || operaType.equalsIgnoreCase(GlobalAttribute.oper_getAttrValue)){
+				if(StringUtils.isBlank(nickName)){
+					result.setResultCode(false);
+					result.setResMsg("the request param nickName should not be empty when the operaType is " + operaType + ", keyType and keyValue is " + keyType + "_" + keyValue);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 }

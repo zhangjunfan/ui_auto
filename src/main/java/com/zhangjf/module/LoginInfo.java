@@ -41,11 +41,13 @@ public class LoginInfo {
 		this.keyValue = keyValue;
 	}
 	
-	public void checkValue(Result result){
+	public boolean checkValue(Result result){
 		if(StringUtils.isBlank(url)){
 			result.setResultCode(false);
 			result.setResMsg("the url can not be empty");
+			return false;
 		}
+		return true;
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package com.zhangjf.utils;
 
+import java.util.HashMap;
+
 import org.joda.time.LocalDateTime;
 
 import com.google.gson.Gson;
@@ -11,11 +13,10 @@ import com.google.gson.Gson;
  */
 public class Result {
 	
-	private boolean resultCode = false;
+	private boolean resultCode = true; 
 	private StringBuffer logMess = new StringBuffer();
 	private String resMsg;
-	
-	private String s;
+	private HashMap<String,String> searchResult = new HashMap<String,String>();
 	
 	public boolean isResultCode() {
 		return resultCode;
@@ -29,7 +30,7 @@ public class Result {
 		return logMess;
 	}
 
-	public void setLogMess(String logInfo) {
+	public void setLogMess(String className, String method, String logInfo) {
 		String time = new LocalDateTime().toString("yyyy-MM-dd HH:mm:ss:sss");
 		this.logMess.append(time + " | " + logInfo);
 	}
@@ -40,6 +41,14 @@ public class Result {
 
 	public void setResMsg(String resMsg) {
 		this.resMsg = resMsg;
+	}
+	
+	public HashMap<String,String> getSearchResult(){
+		return searchResult;
+	}
+	
+	public void addSearchResult(String key, String value){
+		searchResult.put(key, value);
 	}
 	
 	/**

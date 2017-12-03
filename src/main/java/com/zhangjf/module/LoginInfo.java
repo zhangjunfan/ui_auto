@@ -1,7 +1,10 @@
 package com.zhangjf.module;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 
+import com.google.gson.Gson;
 import com.zhangjf.utils.Result;
 
 /**
@@ -11,36 +14,25 @@ import com.zhangjf.utils.Result;
  */
 public class LoginInfo {
 
-	private String userName;
-	private String password;
 	private String url;
-	private String keyValue;
+	private ArrayList<PageOperationInfo> poiList;
 	
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	public String getUrl() {
 		return url;
 	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getKeyValue() {
-		return keyValue;
+
+	public ArrayList<PageOperationInfo> getPoiList() {
+		return poiList;
 	}
-	public void setKeyValue(String keyValue) {
-		this.keyValue = keyValue;
+
+	public void setPoiList(ArrayList<PageOperationInfo> poiList) {
+		this.poiList = poiList;
 	}
-	
+
 	public boolean checkValue(Result result){
 		if(StringUtils.isBlank(url)){
 			result.setResultCode(false);
@@ -52,6 +44,6 @@ public class LoginInfo {
 	
 	@Override
 	public String toString(){
-		return "userName/password/url/keyValue, keyValue is keybord value";
+		return new Gson().toJson(this);
 	}
 }

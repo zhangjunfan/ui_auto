@@ -96,6 +96,8 @@ public class PageOperationInfo {
 				}
 			}
 		}
+		if(sleepTime < 0)
+			sleepTime = 0;
 		return true;
 	}
 	

@@ -29,4 +29,9 @@ public class GlobalAttribute {
 	//eleType的值
 	public static final String ele_webElement = "webElement";
 	public static final String ele_Select = "select";
+	
+	//keyEvent的值
+	public static final String keyEvent_enter = "enter";
+	public static final String keyEvent_esc = "esc";
+	public static final String keyEvent_tab = "tab";
 }

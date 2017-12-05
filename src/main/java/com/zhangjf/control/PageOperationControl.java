@@ -1,5 +1,7 @@
 package com.zhangjf.control;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
+import com.zhangjf.module.PageOperationInfo;
 import com.zhangjf.module.PageOperationInfoList;
 import com.zhangjf.service.PageOperationService;
 import com.zhangjf.service.impl.PageOperationServiceImpl;
@@ -49,7 +52,13 @@ public class PageOperationControl extends BaseAction{
 		if(pageOperationInfoList == null){
 			return;
 		}
-		pos.process(driver, result, pageOperationInfoList);
+		ArrayList<PageOperationInfo> poiList = pageOperationInfoList.getPoiList();
+		if(poiList == null && poiList.size() == 0){
+			result.setResultCode(false);
+			result.setResMsg("the value of poiList in request content is null");
+			return;
+		}
+		pos.process(driver, result, poiList);
 	}
 
 	private PageOperationInfoList parseReqContent(String reqContent, Result result){
@@ -59,6 +68,8 @@ public class PageOperationControl extends BaseAction{
 			if(pageOperationInfoList.checkValue(result)){
 				return pageOperationInfoList;
 			}else{
+				result.setResultCode(false);
+				result.setResMsg("the PageOperationInfoList is null after parse, maybe the request content is null");
 				return null;
 			}	
 		}catch(Exception e){

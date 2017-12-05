@@ -20,11 +20,7 @@ public class LoginServiceImpl implements LoginService{
 		// TODO Auto-generated method stub
 		driver.get(loginInfo.getUrl());
 		ArrayList<PageOperationInfo> poiList = loginInfo.getPoiList();
-		if(poiList == null && poiList.size() == 0){
-			result.setResultCode(true);
-			return;
-		}
-		
+		new PageOperationServiceImpl().process(driver, result, poiList);
 	}
 
 }

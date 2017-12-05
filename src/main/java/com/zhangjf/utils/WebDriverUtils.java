@@ -1,10 +1,20 @@
 package com.zhangjf.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class WebDriverUtils {
+	private String className = WebDriverUtils.class.getSimpleName();
+	
+	public void doClick(WebDriver driver, Result result, String keyType, String keyValue){
+		WebElement element = this.getElement(result, driver, keyType, keyValue);
+		if(element == null){
+			return;
+		}
+		element.click();
+	}
 	
 	private By getBy(WebDriver driver, String keyType, String keyValue){
 		if(keyType.equalsIgnoreCase(GlobalAttribute.key_id)){
@@ -46,14 +56,30 @@ public class WebDriverUtils {
 				if(element.isDisplayed()){
 					return element;
 				}
+				if(num ==1){
+					result.setResultCode(false);
+					result.setResMsg("the element does not display");
+				}
 			}catch(Exception e){
+				if(num ==1){
+					result.setResultCode(false);
+					result.setResMsg("fail to find element");
+					Logs.writeLog(className, "getElement", e);
+				}
 				try {
 					Thread.currentThread().sleep(1000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
+					result.setResultCode(false);
+					Logs.writeLog(className, "getElement", e1);
 					return null;
 				}
 			}
+			num--;
+		}
+		if(StringUtils.isBlank(result.getResMsg())){
+			result.setResultCode(false);
+			result.setResMsg("fail to local element");
 		}
 		return null;
 	}

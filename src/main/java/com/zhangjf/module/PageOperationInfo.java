@@ -63,9 +63,9 @@ public class PageOperationInfo {
 	}
 	
 	public boolean checkValue(Result result){
-		if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getTab)){
+		if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getTab) || operaType.equalsIgnoreCase(GlobalAttribute.oper_switchTab)){
 			return true;
-		}else if(operaType.equalsIgnoreCase(GlobalAttribute.oper_switchTab) && operaType.equalsIgnoreCase(GlobalAttribute.oper_keyEvent)){
+		}else if(operaType.equalsIgnoreCase(GlobalAttribute.oper_keyEvent)){
 			if(StringUtils.isBlank(value)){
 				result.setResultCode(false);
 				result.setResMsg("the request param value should not be empty when the operaType is " + operaType);
@@ -95,6 +95,9 @@ public class PageOperationInfo {
 					return false;
 				}
 			}
+			result.setResultCode(false);
+			result.setResMsg("invalid operaType: " + operaType + ", keyType and keyValue is " + keyType + "_" + keyValue);
+			return false;
 		}
 		if(sleepTime < 0)
 			sleepTime = 0;

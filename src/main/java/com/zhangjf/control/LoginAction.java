@@ -68,6 +68,8 @@ public class LoginAction extends BaseAction{
 			if(loginInfo.checkValue(result)){
 				return loginInfo;
 			}else{
+				result.setResultCode(false);
+				result.setResMsg("the LoginInfo is null after parse, maybe the request content is null");
 				return null;
 			}	
 		}catch(Exception e){

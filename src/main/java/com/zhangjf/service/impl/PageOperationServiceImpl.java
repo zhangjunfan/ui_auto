@@ -32,34 +32,52 @@ public class PageOperationServiceImpl implements PageOperationService{
 		for(PageOperationInfo pageInfo : poiList){
 			String operaType = pageInfo.getOperaType();
 			String value = pageInfo.getValue();
-			//获取tab
-			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getTab)){
-				tabSet = driver.getWindowHandles();
-				result.setLogMess(className, "process", "the window handle set after getTab is: " + tabSet.toString());
-				continue;
-			}
-			//switchtab
-			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_switchTab)){
-				this.switchTab(driver, result);
-				continue;
-			}
-			
-			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_keyEvent)){
-				this.doKeyEvent(result, value);
-				continue;
-			}
 			String eleType = pageInfo.getEleType();
 			String keyType = pageInfo.getKeyType();
 			String keyValue = pageInfo.getKeyValue();
 			String nickName = pageInfo.getNickName();
 			int sleepTime = pageInfo.getSleepTime();
 			
-			if(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement)){
-				if(operaType.equalsIgnoreCase(GlobalAttribute.oper_click)){
-					driverUtils.doClick(driver, result, keyType, keyValue);
-				}
+			//获取tab
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getTab)){
+				tabSet = driver.getWindowHandles();
+				result.setLogMess(className, "process", "the window handle set after getTab is: " + tabSet.toString());
+			}
+			//switchtab
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_switchTab)){
+				this.switchTab(driver, result);
 			}
 			
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_keyEvent)){
+				this.doKeyEvent(result, value);
+			}
+			
+			
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_click)){
+				driverUtils.doClick(driver, result, keyType, keyValue, eleType);
+			}
+			
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_putValue)){
+				driverUtils.putValue(driver, result, keyType, keyValue, eleType, keyValue);
+			}
+			
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getText)){
+				driverUtils.getText(driver, result, keyType, keyValue, eleType, nickName);
+			}
+			
+			if(operaType.equalsIgnoreCase(GlobalAttribute.oper_getAttrValue)){
+				driverUtils.getValue(driver, result, keyType, keyValue, eleType, nickName);
+			}
+			
+			if(sleepTime > 0){
+				try {
+					Thread.currentThread().sleep(sleepTime * 1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					result.setResultCode(false);
+					result.setResMsg("error hapend in thread sleep");
+				}
+			}
 		}
 	}
 	

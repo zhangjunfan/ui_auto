@@ -4,16 +4,74 @@ import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class WebDriverUtils {
 	private String className = WebDriverUtils.class.getSimpleName();
 	
-	public void doClick(WebDriver driver, Result result, String keyType, String keyValue){
+	public void doClick(WebDriver driver, Result result, String keyType, String keyValue, String eleType){
 		WebElement element = this.getElement(result, driver, keyType, keyValue);
 		if(element == null){
 			return;
 		}
-		element.click();
+		if(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement)){
+			element.click();
+		}else{
+			result.setResultCode(false);
+			result.setResMsg("select can not be clicked");
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param value 如果是select，那么value是下拉单的值，也就是selectByVisibleText
+	 */
+	public void putValue(WebDriver driver, Result result, String keyType, String keyValue, String eleType, String value){
+		WebElement element = this.getElement(result, driver, keyType, keyValue);
+		if(element == null){
+			return;
+		}
+		if(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement)){
+			element.clear();
+			element.sendKeys(value);
+		}else{
+			new Select(element).selectByVisibleText(value);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param value 如果是select，那么只获取被选中的那个
+	 */
+	public void getText(WebDriver driver, Result result, String keyType, String keyValue, String eleType, String nickName){
+		WebElement element = this.getElement(result, driver, keyType, keyValue);
+		if(element == null){
+			return;
+		}
+		if(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement)){
+			result.addSearchResult(nickName, element.getText().trim());
+		}else{
+			WebElement option = new Select(element).getFirstSelectedOption();
+			result.addSearchResult(nickName, option.getText().trim());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param value 只获取属性名=value的值
+	 */
+	public void getValue(WebDriver driver, Result result, String keyType, String keyValue, String eleType, String nickName){
+		WebElement element = this.getElement(result, driver, keyType, keyValue);
+		if(element == null){
+			return;
+		}
+		if(eleType.equalsIgnoreCase(GlobalAttribute.ele_webElement)){
+			result.addSearchResult(nickName, element.getAttribute("value"));
+		}else{
+			WebElement option = new Select(element).getFirstSelectedOption();
+			result.addSearchResult(nickName, option.getAttribute("value"));
+		}
 	}
 	
 	private By getBy(WebDriver driver, String keyType, String keyValue){
